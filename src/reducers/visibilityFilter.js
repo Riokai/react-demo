@@ -1,4 +1,4 @@
-import { SET_VISIBILITY_FILTER, VisibilityFilters } from '../actions/todos'
+import { SET_VISIBILITY_FILTER } from '../actions/todos'
 
 export function visibilityFilter(state = 'SHOW_ALL', action) {
   switch (action.type) {
