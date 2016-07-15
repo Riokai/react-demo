@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 export default class AddTodo extends Component {
-  handleClick (e) {
+  handleClick () {
     const node = this.refs.input
     const text = node.value.trim()
 
