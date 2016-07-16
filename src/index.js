@@ -1,28 +1,20 @@
-import 'core-js/fn/object/assign';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux'
-// import App from './components/Main';
-import App from './container/App';
+import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger'
+import { createStore, applyMiddleware } from 'redux'
+import { selectSubreddit, fetchPosts } from './actions/subreddit'
+import rootReducer from './reducers/subreddit'
 
-import { createStore } from 'redux'
-import todoApp from './reducers'
+const loggerMiddleware = createLogger()
 
-let defaultState = localStorage.getItem('state')
+const store = createStore(
+  rootReducer,
+  applyMiddleware(
+    thunkMiddleware, // 允许我们 dispatch() 函数
+    loggerMiddleware // 一个很便捷的 middleware，用来打印 action 日志
+  )
+)
 
-defaultState = defaultState ? JSON.parse(defaultState) : undefined
-
-let store = createStore(todoApp, defaultState)
-
-store.subscribe(() => {
-  let strState = JSON.stringify(store.getState())
-
-  localStorage.setItem('state', strState)
-})
-
-// Render the main component into the dom
-ReactDOM.render((
-  <Provider store={store}>
-    <App />
-  </Provider>
-), document.getElementById('app'));
+store.dispatch(selectSubreddit('reactjs'))
+store.dispatch(fetchPosts('reactjs')).then(() =>
+  console.log(store.getState())
+)
