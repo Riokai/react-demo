@@ -1,9 +1,15 @@
 import fetch from 'isomorphic-fetch'
 import { createAction } from 'redux-act'
 
-export const selectSubreddit = createAction('选择列表')
-export const requestPosts = createAction('发起请求')
-export const receivePosts = createAction('收到请求')
+function createDescriptorAction (text) {
+  const descriptor = text
+
+  return createAction(descriptor)
+}
+
+export const selectSubreddit = createDescriptorAction('选择列表')
+export const requestPosts = createDescriptorAction('发起请求')
+export const receivePosts = createDescriptorAction('收到请求')
 
 export function fetchPosts (subreddit) {
   return (dispatch) => {
