@@ -7,12 +7,14 @@ import {
   receivePosts
 } from '../actions/subreddit'
 
-const selectedsubreddit = createReducer({
-  [selectSubreddit]: (state, subreddit) => subreddit
+export const selectedsubreddit = createReducer({
+  [selectSubreddit]: (state, subreddit) => {
+    return subreddit
+  }
 }, 'reactjs')
 
 
-const postsBySubreddit = createReducer({
+export const postsBySubreddit = createReducer({
   [requestPosts]: (state, payload) => ({
     ...state,
     [payload.subreddit]: {
