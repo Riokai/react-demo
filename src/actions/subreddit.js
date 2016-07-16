@@ -1,71 +1,23 @@
 import fetch from 'isomorphic-fetch'
+import { createAction } from 'redux-act'
 
-export const SELECT_SUBREDDIT = 'SELECT_SUBREDDIT'
-export const INVALIDATE_SUBREDDIT = 'INVALIDATE_SUBREDDIT'
+export const selectSubreddit = createAction('选择列表')
+export const requestPosts = createAction('发起请求')
+export const receivePosts = createAction('收到请求')
 
-export const REQUEST_POSTS = 'REQUEST_POSTS'
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-
-export function selectSubreddit(subreddit) {
-  return {
-    type: SELECT_SUBREDDIT,
-    subreddit
-  }
-}
-
-export function invalidatesubreddit(subreddit) {
-  return {
-    type: INVALIDATE_SUBREDDIT,
-    subreddit
-  }
-}
-
-export function requestPosts(subreddit) {
-  return {
-    type: REQUEST_POSTS,
-    subreddit
-  }
-}
-
-export function receivePosts(subreddit, json) {
-  return {
-    type: RECEIVE_POSTS,
-    subreddit,
-    posts: json.data.children.map(child => child.data),
-    receivedAt: Date.now()
-  }
-}
-
-export function fetchPosts(subreddit) {
-
-  // Thunk middleware 知道如何处理函数。
-  // 这里把 dispatch 方法通过参数的形式传给函数，
-  // 以此来让它自己也能 dispatch action。
-
-  return function (dispatch) {
-
-    // 首次 dispatch：更新应用的 state 来通知
-    // API 请求发起了。
-
-    dispatch(requestPosts(subreddit))
-
-    // thunk middleware 调用的函数可以有返回值，
-    // 它会被当作 dispatch 方法的返回值传递。
-
-    // 这个案例中，我们返回一个等待处理的 promise。
-    // 这并不是 redux middleware 所必须的，但这对于我们而言很方便。
+export function fetchPosts (subreddit) {
+  return (dispatch) => {
+    dispatch(requestPosts({subreddit}))
 
     return fetch(`http://www.subreddit.com/r/${subreddit}.json`)
-      .then(response => response.json())
-      .then(json =>
-
-        // 可以多次 dispatch！
-        // 这里，使用 API 请求结果来更新应用的 state。
-
-        dispatch(receivePosts(subreddit, json))
-      )
-
-      // 在实际应用中，还需要
-      // 捕获网络请求的异常。
+            .then(response => response.json())
+            .then(json => {
+              dispatch(receivePosts({
+                subreddit,
+                posts: json.data.children.map(child => child.data),
+                receivedAt: Date.now()
+              }))
+            }
+          )
   }
 }
