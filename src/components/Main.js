@@ -18,14 +18,9 @@ class AppComponent extends React.Component {
     console.log('load more')
   }
 
-  componentDidMount () {
-    console.log('container', this.refs.container.scrollTop);
-  }
-
   render() {
     return (
       <div>
-        <div style={{width: '100px', background: 'red', height: '40px'}}></div>
         <InfiniteScroll
           addItem={() => {
             let newState = {
