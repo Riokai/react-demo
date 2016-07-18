@@ -2,21 +2,28 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
-
-let yeomanImage = require('../images/yeoman.png');
+import PullToRefresh from 'react-pull-to-refresh'
 
 class AppComponent extends React.Component {
+  handleRefresh (resolve) {
+    setTimeout(() => {
+      resolve()
+    }, 1000)
+  }
+
   render() {
+    const items = [1, 2, 3, 4, 5]
+
     return (
-      <div className="index">
-        <img src={yeomanImage} alt="Yeoman Generator" />
-        <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
-      </div>
+      <PullToRefresh onRefresh={this.handleRefresh}>
+        <ul>
+          {
+            items.map((item, index) => <li key={index}>{item}</li>)
+          }
+        </ul>
+      </PullToRefresh>
     );
   }
 }
-
-AppComponent.defaultProps = {
-};
 
 export default AppComponent;
